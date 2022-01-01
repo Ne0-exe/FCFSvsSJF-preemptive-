@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import random
 import numpy as np
 
+
 dic_list = pickle.load(open("Dic_List.p", "rb"))
 
 average_cycle = 0  # srednia dla jednego ze stu "cyklów" 100 procesów
