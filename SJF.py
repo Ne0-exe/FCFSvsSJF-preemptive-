@@ -7,14 +7,17 @@ x = []
 y = []
 dic_list = pickle.load(open("Dic_List.p", "rb"))
 
+
 class SJF:
 
+
     def manager(self, id, burst, arrive, id_lst):
+
         queue = []
-        for i in range(len(burst)):
-            temp = []
-            temp.extend([i+1, arrive[i], burst[i], 0]) #0 - niezakonczony proces, 1 - zakonczony
+        for i in range(100):
+            temp = [id_lst[i], arrive[i], burst[i], 0]  # 0 - niezakonczony proces, 1 - zakonczony
             queue.append(temp)
+            temp = []
         SJF.schedule(self, queue)
 
 
@@ -26,8 +29,7 @@ class SJF:
         begin = []
         stop = []
         sTime = 0
-        queue.sort(key=lambda x:x[1]) #sortuje po arrival
-
+        queue.sort(key=lambda x: x[1])  # sortuje po arrival
         for i in range(len(queue)):
             ready = []
             temp = []
@@ -74,9 +76,8 @@ class SJF:
             total_turnaround += turnaround_time
             queue[a].append(turnaround_time) # do tablicy tablic queue dodaje 6. wartosc - czas realizacji
         average_turnaround = total_turnaround/len(queue) #sredni czas realizacji
-
         return average_turnaround
-
+      
     def WaitingTime(self, queue):
         total_waiting = 0
         for b in range(len(queue)):
@@ -91,7 +92,6 @@ class SJF:
         global Total_average_waiting
         global Total_average_turnaround
         queue.sort(key=lambda x:x[0]) #sortuje po ID
-
         print("ID Procesu\tPrzybycie\tBurst\tZakonczony?\tCzas zakonczenia\tCzas realizacji\tCzas oczekiwania")
 
         for i in range(len(queue)):
@@ -140,3 +140,4 @@ print("Średni czas oczekiwania"
 print("Średni czas realizacji"
       " używajac SFJ wyniosl: ", Total_average_turnaround/100, 's')
 # ----------------------------------------
+
