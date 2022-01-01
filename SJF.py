@@ -2,32 +2,106 @@ import pickle
 
 dic_list = pickle.load(open("Dic_List.p", "rb"))
 
-for i in range(len(dic_list)):
-    lst = []  # lista potrzebnego czasu na wykonanie
-    order = []
-    timer = 0  # dazy do momentu przybycia ostatniego procesu (po dodaniu casu na wykonanie)
-    for key, val in dic_list[i].items():
-        lst.append(val)  # dodaję do tablicy potrzebny czas na wykonanie
-        if key == 0:  # proces początkowy
-            order.insert(0, val)
-            lst[i] -= 1  # odejmuje sekunde
-            order[0] -= 1
-            timer += 1
-        else:
-            if key == timer:
-                for a in range(len(order)-2, 0):
-                    order.append(lst[i])
-                    l = len(order) - 1
-                    if order[l] < order[a]:
-                        order[l], order[a] = order[a], order[l]
-                    else:
-                        continue
-                order[0] -= 1
-                timer += 1
-                print(order)
-            else:
-                timer += 1
-    print("Skonczylem cykl nr", i)
+class SJF:
+    def manager(self, total, burst, arrive, id_lst):
+        queue = []
+        for i in range(len(burst)):
+            temp = []
+            temp.extend([i+1, arrive[i], burst[i], 0]) #0 - niezakonczony proces, 1 - zakonczony
+            queue.append(temp)
+        SJF.schedule(self, queue)
 
-print("skonczylem")
-print(order)
+    def schedule(self, queue):
+        begin = []
+        stop = []
+        sTime = 0
+        queue.sort(key=lambda x:x[1]) #sortuje po arrival
+
+        for i in range(len(queue)):
+            ready = []
+            temp = []
+            normal = []
+            for a in range(len(queue)):
+                if(queue[a][1] <= sTime) and (queue[a][3] == 0):
+                    temp.extend([queue[a][0], queue[a][1], queue[a][2]])
+                    ready.append(temp)
+                    temp= []
+                elif queue[a][3] == 0:
+                    temp.extend([queue[a][0], queue[a][1], queue[a][2]])
+                    normal.append(temp)
+                    temp = []
+            if len(ready) != 0:
+                ready.sort(key=lambda x:x[2]) #sortuje po burst
+                begin.append(sTime)
+                sTime = sTime + ready[0][2]
+                eTime = sTime
+                stop.append(eTime)
+                for a in range(len(queue)):
+                    if queue[a][0] == ready[0][0]:
+                        break
+                    queue[a][3] = 1
+                    queue[a].append(eTime)
+            elif len(ready) == 0:
+                if sTime < normal[0][1]:
+                    sTime = normal[0][1]
+                begin.append(sTime)
+                sTime = sTime + normal[0][2]
+                eTime = sTime
+                stop.append(eTime)
+                for a in range(len(queue)):
+                    if queue[a][0] == ready[0][0]:
+                        break
+                    queue[a][3] = 1
+                    queue[a].append(eTime)
+            tTime = SJF.TurnaroundTime(self, queue)
+            wTime = SJF.WaitingTime(self, queue)
+            SJF.PrintData(self, queue, tTime, wTime)
+    def TurnaroundTime(self, queue):
+        total_turnaround = 0
+        for i in range(len(queue)):
+            turnaround_time = queue[i][4] - queue[i][1] #zakonczenie - przybycie
+            total_turnaround = total_turnaround + turnaround_time
+            queue[i].append(turnaround_time)
+        average_turnaround = total_turnaround/len(queue)
+
+        return average_cycle
+
+    def WaitingTime(self, queue):
+        total_waiting = 0
+        for i in range(len(queue)):
+            waiting_time = queue[i][5] - queue[i][2] # turnaround - burst
+            total_waiting = total_waiting + waiting_time
+            queue[i].append(waiting_time)
+        average_waiting = total_waiting/len(queue)
+
+        return average_waiting
+
+    def PrintData(self, queue, average_turnaround, average_waiting):
+        queue.sort(key=lambda x:x[0]) #sortuje po ID
+
+        print("ID Procesu Przybycie Burst   Zakonczenie Czas realizacji Czas oczekiwania")
+
+        for i in raneg(len(queue)):
+            for a in range(len(queue[i])):
+                print(queue[i][a], end="				")
+            print()
+        print("Sredni czas realizacji ", average_turnaround)
+
+for i in range(len(dic_list)):
+    burst_lst = []
+    arrive_lst = []
+    id_lst = []
+    id = 1
+    for key, val in dic_list[i].items():
+        burst_lst.append(val)
+        arrive_lst.append(key)
+        id_lst.append(id)
+        id += 1
+sjf = SJF()
+sjf.manager(id, burst_lst, arrive_lst, id_lst)
+
+
+
+
+
+
