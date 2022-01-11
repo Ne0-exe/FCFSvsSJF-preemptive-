@@ -14,7 +14,7 @@ y = []
 # ----------------FCFS--------------------
 print("Średni czas cyklu nr ")
 for i in range(len(dic_list)):
-    for key, val in dic_list[i].items():
+    for key, val in dic_list[i].items():  # key - czas przybycia, val - burst
         if key == 0:
             continue  # czas oczekiwania = 0, wiec nic nie dodajemy
         else:
