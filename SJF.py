@@ -15,14 +15,14 @@ class SJF:
             temp = []
             temp.extend([i+1, arrive[i], burst[i], 0]) #0 - niezakonczony proces, 1 - zakonczony
             queue.append(temp)
-        SJF.schedule(self, queue)
+        SJF.Schedule(self, queue)
 
 
 #stworzylem tablice 'queue' zawierajaca 100 tablic, kazda na razie zawiera 4 pozycje
 #queue = [[id, arrive, burst, 0/1],[ , , , ],[ , , , ],[ , , , ],....]
 
 
-    def schedule(self, queue):
+    def Schedule(self, queue):
         begin = []
         stop = []
         sTime = 0
@@ -136,7 +136,7 @@ plt.ylabel("Średni czas oczekiwania cyklu")
 plt.title("SJF(np) - średni czas oczekiwania 100 cykli")
 plt.show()
 print("Średni czas oczekiwania"
-      " używajac SFJ wyniosl: ", Total_average_waiting/100, 's')
+      " używajac SFJ wyniosl: ", round(Total_average_waiting/100, 2), 's')
 print("Średni czas realizacji"
-      " używajac SFJ wyniosl: ", Total_average_turnaround/100, 's')
+      " używajac SFJ wyniosl: ", round(Total_average_turnaround/100, 2), 's')
 # ----------------------------------------

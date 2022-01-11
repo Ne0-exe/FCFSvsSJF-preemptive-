@@ -19,4 +19,6 @@ while counter < 100:
     dic_list.append(dic_copy)
     counter += 1
 
+print(dic_list)
+
 pickle.dump(dic_list, open("Dic_List.p", "wb"))
